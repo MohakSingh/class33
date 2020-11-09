@@ -11,9 +11,11 @@ var bird, slingshot;
 var gameState = "onSling";
 var bg = "sprites/bg1.png";
 var score = 0;
+var sound;
 
 function preload() {
     getBackgroundImg();
+    sound=loadSound("angry bird launching.mp3");
 }
 
 function setup(){
@@ -90,11 +92,15 @@ function mouseDragged(){
 function mouseReleased(){
     slingshot.fly();
     gameState = "launched";
+    sound.play();
 }
 
 function keyPressed(){
-    if(keyCode === 32){
+    if(keyCode === 32 && bird.body.speed<1){
+        Matter.Body.setPosition(bird.body,{x:200, y:50});
        slingshot.attach(bird.body);
+       bird.trajectory=[];
+       
     }
 }
 
@@ -105,7 +111,7 @@ async function getBackgroundImg(){
     var datetime = responseJSON.datetime;
     var hour = datetime.slice(11,13);
     
-    if(hour>=0600 && hour<=1900){
+    if(hour>=06 && hour<=19){
         bg = "sprites/bg1.png";
     }
     else{
@@ -114,4 +120,5 @@ async function getBackgroundImg(){
 
     backgroundImg = loadImage(bg);
     console.log(backgroundImg);
+    console.log(hour);
 }
